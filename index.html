@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=, initial-scale=1.0">
+    <title>家計簿アプリ</title>
+</head>
+<body>
+
+<div>誰が使った？</div>
+<select id="who_used">
+        <option id="husband">お父さん</option>
+        <option id="wife">お母さん</option>
+        <option id="boy">息子</option>
+        <option id="girl">娘</option>
+</select>
+
+<div>何に使った？</div>
+<select name="" id="usage_type">
+    <option id="food">食事</option>
+    <option id="education">教育</option>
+    <option id="house">家</option>
+    <option id="travel">旅行・交通費</option>
+    <option id="others">秘密の出費</option>
+
+</select>
+
+<div>いくら使った？</div>
+<input type="number" required id="amount">
+
+<div>
+  <!-- 送信ボタン -->
+  <button id="send">送信</button>
+  <!-- 削除ボタン -->
+    <button id="erase">データリセット</button>
+</div>
+
+</select>
+
+<div id="breakdown">集計</div>
+
+<table border="1">
+    <tr>
+        <th>誰が使った？</th>
+        <th>合計金額</th>
+        <th>注意</th>
+    </tr>
+    <tr>
+        <th id="username_husband">お父さん</th>
+        <th id="amount_husband"></th>
+        <th id="caution_husband"></th>
+    </tr>
+    <tr>
+      <th id="username_wife">お母さん</th>
+      <th id="amount_wife"></th>
+      <th id="caution_wife"></th>
+  </tr>
+  <tr>
+    <th id="username_boy">息子</th>
+    <th id="amount_boy"></th>
+    <th id="caution_buy"></th>
+</tr>
+<tr>
+  <th id="username_girl">娘</th>
+  <th id="amount_girl"></th>
+  <th id="caution_girl"></th>
+</tr>
+
+<div id="test"></div>
+
+
+
+
+
+
+</table>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/7.14.2/firebase.js"></script>
+
+<script>
+  // Your web app's Firebase configuration
+  var firebaseConfig = {
+    apiKey: "AIzaSyBGad-10jaomWx7XQO3nhAVGMkWw9L9a3c",
+    authDomain: "kakeibo-f07c7.firebaseapp.com",
+    databaseURL: "https://kakeibo-f07c7.firebaseio.com",
+    projectId: "kakeibo-f07c7",
+    storageBucket: "kakeibo-f07c7.appspot.com",
+    messagingSenderId: "220466759500",
+    appId: "1:220466759500:web:f516564939d097c837f1e9"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+
+  const newPostRef = firebase.database().ref();
+
+  $("#send").on('click',function(){
+    newPostRef.push({
+      username : $("#who_used").val(),
+      usage : $("#usage_type").val(),
+      amount : $("#amount").val(),
+
+    })
+  });
+
+
+    newPostRef.on('child_added',function(data){
+        let v = data.val();
+        let str = `<p>${v.username}<br>${v.usage}<br>${v.amount}</p>`;
+
+        $("#test").append(str);
+      
+    });
+
+
+    $("#erase").on('click',function(){
+    newPostRef.remove()
+    $("#test").html('')
+
+  });
+
+
+
+
+  // $("#send").on('click', function(){
+  //   var data1 = {
+  //     value1 : $("#who_used").val(),
+  //     value2 : $("#usage_type").val(),
+  //     value3 : $("#amount").val(),
+  //   }
+
+
+  // var datatext = JSON.stringify(data1); 
+  // var i = localStorage.length
+
+  // localStorage.setItem(i,datatext);
+
+
+  // for (let i = 0; i<localStorage.length; i++){
+  //   var data2 = localStorage.getItem(i)  
+  //   console.log(data2)
+  //   var data3=JSON.stringify(data2)
+  // }
+
+  // });
+  
+
+
+
+
+
+</script>
+</body>
+</html>
